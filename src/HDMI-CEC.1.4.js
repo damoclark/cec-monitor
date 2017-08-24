@@ -2,7 +2,7 @@
  * Created by pablo on 6/13/17.
  */
 
-'use strict'
+'use strict' ;
 
 let data = {
   VendorId: {
@@ -522,18 +522,18 @@ let data = {
     INVALID_OPERAND: 0x03,
     REFUSED: 0x04
   }
-}
+} ;
 
 
 // Calculate and store reverse mapping of names to codes
 // e.g. AbortReasonNames[0x00] = 'UNRECOGNIZED_OPCODE';
 for (let section in data) {
-  data[section+'Names'] = {}
+  data[section+'Names'] = {} ;
   for (let key in data[section]) {
     if(data[section].hasOwnProperty(key)){
-      data[section+'Names'][data[section][key]] = key
+      data[section+'Names'][data[section][key]] = key ;
     }
   }
 }
 
-export default data
+export default data ;
