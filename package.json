@@ -22,9 +22,6 @@
     "monitor",
     "wrapper"
   ],
-  "pre-commit": [
-    "release"
-  ],
   "scripts": {
     "build": "babel src -d lib",
     "test": "babel src -d lib && node test/test.js",
