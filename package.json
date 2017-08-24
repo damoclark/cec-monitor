@@ -1,7 +1,7 @@
 {
-  "name": "@senzil/cec-monitor",
+  "name": "@damoclark/cec-monitor",
   "version": "1.0.10-release.1",
-  "description": "HDMI-CEC library with a simple monitor written on ES6 to make cec enabled apps.",
+  "description": "Fork of @senzil/cec-monitor - HDMI-CEC library with a simple monitor written on ES6 to make cec enabled apps.",
   "author": {
     "name": "SENZIL SRL",
     "email": "contact@senzil.com",
@@ -12,6 +12,11 @@
       "name": "Pablo González",
       "email": "pablodgonzalez@gmail.com",
       "web": "https://github.com/pablodgonzalez"
+    },
+    {
+      "name": "Damien Clark",
+      "email": "damo.clarky@gmail.com",
+      "web": "https://damos.world"
     }
   ],
   "main": "index.js",
@@ -25,8 +30,7 @@
   "scripts": {
     "build": "babel src -d lib",
     "test": "babel src -d lib && node test/test.js",
-    "prepublishOnly": "npm run build",
-    "release": "npm version --no-git-tag-version prerelease && git add ."
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -38,7 +42,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:senzil/cec-monitor.git"
+    "url": "git@github.com:damoclark/cec-monitor.git"
   },
   "license": "MIT",
   "dependencies": {
