@@ -273,7 +273,7 @@ export default class CECMonitor extends EventEmitter {
     if(isPhysical(address)) {
       address = this.p2l[address] ;
       if(address === undefined) {
-        return null ;
+        return null ; 
       }
     }
     // Return copy of our state information
@@ -486,10 +486,6 @@ export default class CECMonitor extends EventEmitter {
     this.client.on('close', this._onClose) ;
   }.bind(this);
 
-  _restart = function() {
-    this._initCecClient() ;
-  }.bind(this);
-
   _onClose = function() {
     this.client = null ;
     if(this.autorestarting) {
@@ -526,7 +522,7 @@ export default class CECMonitor extends EventEmitter {
       this._processWarning(data) ;
     } else if(/^ERROR:.*/g.test(data)){
       this._processError(data) ;
-    } else if(/^Connection lost - trying to reconnect$/.test(data)){
+    } else if(/(^no\sserial\sport\sgiven)|(^Connection\slost)/gu.test(data)){
       if(this.no_serial.reconnect) {
         this.recconnect_intent = true ;
         this.ready = false ;
@@ -616,7 +612,7 @@ export default class CECMonitor extends EventEmitter {
       } ;
       break ;
 
-      // todo: untested
+    // todo: untested
     case CEC.Opcode.DECK_STATUS:
       if (packet.args.length !== 2) {
         return this.emit(CECMonitor.EVENTS._ERROR, 'opcode command DECK_STATUS without Deck Info') ;
@@ -758,7 +754,7 @@ export default class CECMonitor extends EventEmitter {
       this.address.hdmi = parseInt(match[2], 10) ;
     }
 
-    const regexPhysical = /physical\saddress:\s([\w\.]+)/gu ;
+    const regexPhysical = /physical\saddress:\s([\w.]+)/gu ;
     match = regexPhysical.exec(data) ;
     if(match) {
       this.address.physical = match[1] ;
@@ -778,7 +774,6 @@ export default class CECMonitor extends EventEmitter {
     if(this.debug) {
       return this.emit(CECMonitor.EVENTS._DEBUG, data) ;
     }
-    return ;
   }.bind(this);
 
   _processWarning = function(data){
@@ -801,7 +796,7 @@ export default class CECMonitor extends EventEmitter {
  * @return {string} Physical address in . notation ie 0.0.0.0
  */
 function args2physical(value) {
-  var v = value[0] << 8 | value[1] ;
+  let v = value[0] << 8 | value[1] ;
 
   return ['0','0','0','0'].concat(v.toString(16).toLocaleUpperCase().split('')).slice(-4).join('.') ;
 }
@@ -813,9 +808,9 @@ function args2physical(value) {
  * @return {number[]} A two-byte encoded verstion represented as an array
  */
 function physical2args(address) {
-  var s = address.split('.').join('') ;
-  var v = parseInt(s,16) ;
-  var arr = [] ;
+  let s = address.split('.').join('') ;
+  let v = parseInt(s,16) ;
+  let arr = [] ;
 
   arr.unshift(v & 0xFF) ;
   v >>= 8 ;
@@ -830,7 +825,7 @@ function physical2args(address) {
  */
 function isPhysical(address) {
   if(typeof address !== 'string')
-    return false ;
+    return false ; 
 
   return (address.toString().match(/^(?:\d+\.){3}\d+$/) !== null) ;
 }
