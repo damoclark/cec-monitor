@@ -1,6 +1,6 @@
 {
   "name": "@damoclark/cec-monitor",
-  "version": "1.0.10-release.2",
+  "version": "1.0.10-release.3",
   "description": "Fork of @senzil/cec-monitor - HDMI-CEC library with a simple monitor written on ES6 to make cec enabled apps.",
   "author": {
     "name": "SENZIL SRL",
