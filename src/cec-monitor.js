@@ -637,6 +637,11 @@ export default class CECMonitor extends EventEmitter {
         val: source,
         str: physical
       }
+      // If we have received a REPORT_PHYSICAL_ADDRESS from TV
+      // to broadcast, then query all devices for power status
+      if(packet.target == 15 && packet.source == 0) {
+        queryPowerStatus.call(this, packet.target)
+      }
       break
 
     case CEC.Opcode.REPORT_POWER_STATUS:
@@ -690,16 +695,7 @@ export default class CECMonitor extends EventEmitter {
         return this.emit(CECMonitor.EVENTS._ERROR, 'opcode command STANDBY with bad args')
       }
       // If we have received a standby, query devices for power status
-      if(packet.target === 15) { // Query all
-        setTimeout(() => {
-          Object.keys(this.cache).forEach(target => {
-            this.SendMessage(null,target,CEC.Opcode.GIVE_DEVICE_POWER_STATUS)
-          })
-        },5000)
-      }
-      else { // Otherwise just target
-        setTimeout(() => {this.SendMessage(null,packet.target,CEC.Opcode.GIVE_DEVICE_POWER_STATUS)},3000)
-      }
+      queryPowerStatus.call(this,packet.target)
       break
 
     case CEC.Opcode.IMAGE_VIEW_ON:
@@ -813,7 +809,7 @@ function physical2args(address) {
  */
 function isPhysical(address) {
   if(typeof address !== 'string')
-    return false 
+    return false
 
   return (address.toString().match(/^(?:\d+\.){3}\d+$/) !== null)
 }
@@ -843,4 +839,23 @@ function parseAddress(address,def) {
     address = def ;
   }
   return address ;
+}
+
+/**
+ * Send message to query the power status of one or all devices
+ * @param {number} target Logical address to query or if BROADCAST, query each in turn
+ */
+function queryPowerStatus(target) {
+  target = Number.parseInt(target)
+  var logic = (target == 15) ? Object.keys(this.cache) : [target]
+  setTimeout(() => {
+    logic.forEach(t => {
+      let phys = this.GetState(t).physical
+      // Skip self or logical that has no physical address
+      if (this.GetLogicalAddresses().includes(t) || phys === null) {
+        return
+      }
+      this.SendMessage(null,t,CEC.Opcode.GIVE_DEVICE_POWER_STATUS)
+    })
+  },5000)
 }
