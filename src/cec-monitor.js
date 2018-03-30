@@ -33,6 +33,7 @@ export default class CECMonitor extends EventEmitter {
     this.address = {
       primary: CEC.LogicalAddress.UNKNOWN,
       physical: 0xFFFF,
+      logical: {},
       base: CEC.LogicalAddress.UNKNOWN,
       hdmi: options.hdmiport || 1
     }
